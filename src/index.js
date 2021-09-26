@@ -1,9 +1,12 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('../config.json');
+const prefix = "-";
+
 
 // Nueva instancia de cliente
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES] });
+
 
 //Command handler
 client.commands = new Collection();
@@ -13,11 +16,7 @@ for (const file of commandFiles){
 	client.commands.set(command.data.name, command);
 };
 
-
-client.once('ready', () => {
-	console.log('Ready!');
-});
-
+/*
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
@@ -32,5 +31,15 @@ client.on('interactionCreate', async interaction => {
 		await interaction.reply({ content: 'Oh no! Algo ha pasado tratando de ejecturar ', ephemeral: true});
 	}
 });
+*/
+
+client.on('messageCreate', async message => {
+	//console.log(message);
+	if(!message.content.startsWith(prefix)) return;
+	
+	const args = message.content.slice(prefix.length).split(/ +/);
+
+
+})
 
 client.login(token);
