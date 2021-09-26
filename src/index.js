@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('../config.json');
 const prefix = "-";
@@ -11,16 +10,12 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 //Command handler
 client.commands = new Collection();
 client.events = new Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-for (const file of commandFiles){
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.data.name, command);
-};
 
-
-client.once('ready', () => {
-	console.log('Listo')
+['commandHandler', 'eventHandler'].forEach(handler => {
+	require(`./handlers/${handler}`)(client);
 })
+
+
 
 /*
 client.on('interactionCreate', async interaction => {
@@ -37,7 +32,7 @@ client.on('interactionCreate', async interaction => {
 		await interaction.reply({ content: 'Oh no! Algo ha pasado tratando de ejecturar ', ephemeral: true});
 	}
 });
-*/
+
 
 
 
@@ -57,5 +52,6 @@ client.on('messageCreate', async message => {
 	}
 
 });
+*/
 
 client.login(token);
