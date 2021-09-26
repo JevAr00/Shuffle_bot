@@ -39,6 +39,15 @@ client.on('messageCreate', async message => {
 	
 	const args = message.content.slice(prefix.length).split(/ +/);
 
+	const command = args.shift().toLowerCase();
+
+	try{
+		await command.execute();
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'Oh no! Algo ha pasado tratando de ejecturar ', ephemeral: true});
+	}
+
 
 })
 
