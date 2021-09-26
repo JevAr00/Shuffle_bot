@@ -8,7 +8,7 @@ module.exports = (client) => {
 	    if (event.once) {
             client.once(eventName, event.bind(client));
         } else {
-            client.on(eventName, event.bind(client));
+            client.on(eventName, event.bind(null, client));
         }
     };
 };
