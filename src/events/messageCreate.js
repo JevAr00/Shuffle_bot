@@ -1,6 +1,6 @@
 module.exports = async (client, message) => {
     //console.log(message);
-    const prefix = "3";
+    const prefix = "!";
 	if(!message.content.startsWith(prefix) || message.author.bot) return;
 	
 	
