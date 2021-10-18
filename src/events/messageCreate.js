@@ -5,11 +5,11 @@ module.exports = async (client, message) => {
 	
 	
 	const args = message.content.slice(prefix.length).split(/ +/);
-	const theCommand = args.shift().toLowerCase();
-    const command = client.commands.get(theCommand);
+	const command = args.shift().toLowerCase();
+    const commandList = client.commands.get(command);
 
 	try{
-		await command.execute(message);
+		await commandList.execute(client, message, command, args);
 	} catch (error) {
 		console.error(error);
 		await message.reply({ content: 'Oh no! Algo ha pasado tratando de ejecutar el comando ', ephemeral: true});
