@@ -1,9 +1,10 @@
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('../config.json');
+const dotenv = require('dotenv')
+
 
 // Nueva instancia de cliente
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES] });
-
+dotenv.config();
 
 //Handlers
 client.commands = new Collection();
@@ -13,4 +14,4 @@ client.events = new Collection();
 	require(`./handlers/${handler}`)(client);
 })
 
-client.login(token);
+client.login(process.env.TOKEN);
