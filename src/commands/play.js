@@ -33,7 +33,7 @@ module.exports = {
             
             player.on(AudioPlayerStatus.Idle, () => connection.destroy());
         }catch(error){
-            await message.reply({ content: 'Parece que ha ocurrido algo. vuelve a intentarlo.', ephemeral: true});
+            await message.reply({ content: 'Parece que ha ocurrido algo. Vuelve a intentarlo.', ephemeral: true});
         }
         
         
