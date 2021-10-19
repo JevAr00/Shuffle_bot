@@ -8,28 +8,34 @@ module.exports = {
         const voiceChannel = message.member.voice.channel;
         if(!voiceChannel) return message.reply({ content: 'Parece que no estas dentro de un canal de voz al que pueda unirme', ephemeral: true});
 
-        const {
-            AudioPlayerStatus,
-            StreamType,
-            createAudioPlayer,
-            createAudioResource,
-            joinVoiceChannel,
-        } = require('@discordjs/voice');
+        try{
+            const {
+                AudioPlayerStatus,
+                StreamType,
+                createAudioPlayer,
+                createAudioResource,
+                joinVoiceChannel,
+            } = require('@discordjs/voice');
+            
+            const connection = joinVoiceChannel({
+                channelId: voiceChannel.id,
+                guildId: message.guild.id,
+                adapterCreator: message.guild.voiceAdapterCreator,
+            });
+            
+            const stream = ytdl(args, { filter: 'audioonly' });
+            const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
+            const player = createAudioPlayer();
+            
+            player.play(resource);
+            connection.subscribe(player);
+            args = ""
+            
+            player.on(AudioPlayerStatus.Idle, () => connection.destroy());
+        }catch(error){
+            await message.reply({ content: 'Parece que ha ocurrido algo. vuelve a intentarlo.', ephemeral: true});
+        }
         
-        const connection = joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: message.guild.id,
-            adapterCreator: message.guild.voiceAdapterCreator,
-        });
-        
-        const stream = ytdl(args, { filter: 'audioonly' });
-        const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
-        const player = createAudioPlayer();
-        
-        player.play(resource);
-        connection.subscribe(player);
-        
-        player.on(AudioPlayerStatus.Idle, () => connection.destroy());
         
     }
 }
