@@ -30,7 +30,7 @@ module.exports = {
 
         if (ytdl.validateURL(args[0])) {
             const video = await ytdl.getInfo(args[0]);
-            song = { title: video.videoDetails.title, url: video.videoDetails.video_url }
+            song = { title: video.videoDetails.title, url: video.videoDetails.video_url };
         } else {
             const search = async (query) => {
                 const videoSearch = await ytSearch(query);
@@ -39,7 +39,7 @@ module.exports = {
 
             const video = await search(args.join(' '));
             if (video) {
-                song = { title: video.title, url: video.url }
+                song = { title: video.title, url: video.url };
             } else {
                 await message.reply({ content: 'Parece que ha ocurrido algo. Vuelve a intentarlo.', ephemeral: true });
             }
@@ -47,7 +47,7 @@ module.exports = {
 
         if(!serverQueue){
             const queueConstructor = {
-                TextChannel: message.channel,
+                Message: message,
                 Connection: connection,
                 Songs:[]
             }
@@ -59,7 +59,7 @@ module.exports = {
                 songPlayer(message.guild, queueConstructor.Songs[0]);
             }catch(error){
                 queue.delete(message.guild.id);
-                throw error;
+                await message.reply({content: `Avisa al admin\nserverQueue.songPlayer error\n\n ${error}`, ephemeral: true });
             }
         }else{
             serverQueue.Songs.push(song);
@@ -90,6 +90,7 @@ const songPlayer = async (guild, song) => {
         queue.delete(guild.id);
         return;
     }
+
     try {
         const stream = ytdl(song.url, { filter: 'audioonly' });
         const resource = createAudioResource(stream, { inputType: StreamType.WebmOpus });
@@ -98,17 +99,13 @@ const songPlayer = async (guild, song) => {
         player.play(resource);
         songQueue.Connection.subscribe(player);
 
-        player.on(NoSubscriberBehavior.Pause, () => {
-            player.play(resource);
-        });
-
         player.on(AudioPlayerStatus.Idle, () => {
             songQueue.Songs.shift();
             songPlayer(guild, songQueue.Songs[0]);
         });
-        await songQueue.TextChannel.send(`${song.title} esta sonando`);
+        await songQueue.Message.channel.send(`${song.title} esta sonando`);
+
     } catch (error) {
-        await songQueue.TextChannel.send({ content: 'Avisa al admin\n player.error', ephemeral: true });
-        await console.log(`${error}`);
+        await songQueue.Message.reply({ content: `Avisa al admin\nsongPlayer.player error\n\n${error}`, ephemeral: true });
     }
 }
