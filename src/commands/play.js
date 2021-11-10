@@ -18,7 +18,7 @@ module.exports = {
         const voiceChannel = message.member.voice.channel;
         if (!voiceChannel) return message.reply({ content: 'Parece que no estas dentro de un canal de voz al que pueda unirme', ephemeral: true });
 
-        const server_queue = queue.get(message.guild.id);
+        const serverQueue = queue.get(message.guild.id);
 
         let song = {};
 
@@ -45,6 +45,28 @@ module.exports = {
             }
         }
 
+        if(!serverQueue){
+            const queueConstructor = {
+                TextChannel: message.channel,
+                Connection: connection,
+                Songs:[]
+            }
+
+            queue.set(message.guild.id, queueConstructor);
+            queueConstructor.Songs.push(song);
+
+            try{
+                songPlayer(message.guild, queueConstructor.Songs[0]);
+            }catch(error){
+                queue.delete(message.guild.id);
+                throw error;
+            }
+        }else{
+            serverQueue.Songs.push(song);
+            return message.channel.send(`${song.title} agregada a la cola`);
+        }
+
+        /*
         try {
             const stream = ytdl(song.url, { filter: 'audioonly' });
             const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
@@ -56,7 +78,37 @@ module.exports = {
             player.on(AudioPlayerStatus.Idle, () => connection.destroy());
         } catch (error) {
             await message.reply({ content: 'Avisa al admin\n player.error', ephemeral: true });
-        }
+        }*/
+    }
+}
 
+const songPlayer = async (guild, song) => {
+    const songQueue = queue.get(guild.id);
+
+    if(!song){
+        songQueue.Connection.destroy();
+        queue.delete(guild.id);
+        return;
+    }
+    try {
+        const stream = ytdl(song.url, { filter: 'audioonly' });
+        const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
+        const player = createAudioPlayer();
+
+        player.play(resource);
+        songQueue.Connection.subscribe(player);
+
+        player.on(NoSubscriberBehavior.Pause, () => {
+            player.play(resource);
+        });
+
+        player.on(NoSubscriberBehavior.Stop, () => {
+            songQueue.Songs.shift();
+            songPlayer(guild, songQueue.Songs[0]);
+        });
+        await songQueue.TextChannel.send(`${song.title} esta sonando`);
+    } catch (error) {
+        await songQueue.TextChannel.send({ content: 'Avisa al admin\n player.error', ephemeral: true });
+        await console.log(`${error}`);
     }
 }
