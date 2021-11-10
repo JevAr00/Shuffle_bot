@@ -102,7 +102,7 @@ const songPlayer = async (guild, song) => {
             player.play(resource);
         });
 
-        player.on(NoSubscriberBehavior.Stop, () => {
+        player.on(AudioPlayerStatus.Idle, () => {
             songQueue.Songs.shift();
             songPlayer(guild, songQueue.Songs[0]);
         });
