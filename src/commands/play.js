@@ -92,7 +92,7 @@ const songPlayer = async (guild, song) => {
     }
     try {
         const stream = ytdl(song.url, { filter: 'audioonly' });
-        const resource = createAudioResource(stream, { inputType: StreamType.Raw });
+        const resource = createAudioResource(stream, { inputType: StreamType.WebmOpus });
         const player = createAudioPlayer();
 
         player.play(resource);
