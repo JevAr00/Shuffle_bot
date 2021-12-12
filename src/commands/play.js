@@ -56,7 +56,7 @@ module.exports = {
             queueConstructor.Songs.push(song);
 
             try{
-                songPlayer(message.guild, queueConstructor.Songs[0]);
+                await songPlayer(message.guild, queueConstructor.Songs[0]).catch();
             }catch(error){
                 queue.delete(message.guild.id);
                 await message.reply({content: `Avisa al admin\nserverQueue.songPlayer error\n\n ${error}`, ephemeral: true });
@@ -65,20 +65,6 @@ module.exports = {
             serverQueue.Songs.push(song);
             return message.channel.send(`${song.title} agregada a la cola`);
         }
-
-        /*
-        try {
-            const stream = ytdl(song.url, { filter: 'audioonly' });
-            const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
-            const player = createAudioPlayer();
-
-            player.play(resource);
-            connection.subscribe(player);
-
-            player.on(AudioPlayerStatus.Idle, () => connection.destroy());
-        } catch (error) {
-            await message.reply({ content: 'Avisa al admin\n player.error', ephemeral: true });
-        }*/
     }
 }
 
@@ -93,11 +79,11 @@ const songPlayer = async (guild, song) => {
 
     try {
         const stream = ytdl(song.url, { filter: 'audioonly' });
-        const resource = createAudioResource(stream, { inputType: StreamType.WebmOpus });
+        const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
         const player = createAudioPlayer();
 
         player.play(resource);
-        songQueue.Connection.subscribe(player);
+        await songQueue.Connection.subscribe(player);
 
         player.on(AudioPlayerStatus.Idle, () => {
             songQueue.Songs.shift();
