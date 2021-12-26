@@ -3,7 +3,6 @@ const ytSearch = require('yt-search')
 const {
     AudioPlayerStatus,
     StreamType,
-    NoSubscriberBehavior,
     createAudioPlayer,
     createAudioResource,
     joinVoiceChannel,
@@ -22,12 +21,18 @@ module.exports = {
 
         let song = {};
 
+        /**
+         * Inicia la conexion en una canal de voz
+         */
         const connection = joinVoiceChannel({
             channelId: voiceChannel.id,
             guildId: message.guild.id,
             adapterCreator: message.guild.voiceAdapterCreator,
         });
 
+        /**
+         * Valida si se recibe una URL o lenguaje natural para buscar cancion
+         */
         if (ytdl.validateURL(args[0])) {
             const video = await ytdl.getInfo(args[0]);
             song = { title: video.videoDetails.title, url: video.videoDetails.video_url };
@@ -45,6 +50,9 @@ module.exports = {
             }
         }
 
+        /**
+         * Cola global de canciones
+         */
         if(!serverQueue){
             const queueConstructor = {
                 Message: message,
@@ -56,7 +64,7 @@ module.exports = {
             queueConstructor.Songs.push(song);
 
             try{
-                await songPlayer(message.guild, queueConstructor.Songs[0]).catch();
+                songPlayer(message.guild, queueConstructor.Songs[0]);
             }catch(error){
                 queue.delete(message.guild.id);
                 await message.reply({content: `Avisa al admin\nserverQueue.songPlayer error\n\n ${error}`, ephemeral: true });
@@ -68,6 +76,11 @@ module.exports = {
     }
 }
 
+/**
+ * @param {*} guild Identificador de la cola global
+ * @param {*} song URL de la cancion a reproducir
+ * @returns Una cancion en el chat de voz en el que se encuentra unido
+ */
 const songPlayer = async (guild, song) => {
     const songQueue = queue.get(guild.id);
 
@@ -78,7 +91,7 @@ const songPlayer = async (guild, song) => {
     }
 
     try {
-        const stream = ytdl(song.url, { filter: 'audioonly' });
+        const stream = ytdl(song.url, { filter: 'audioonly' , Quality: 'highestaudio', highWaterMark:1 << 25});
         const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
         const player = createAudioPlayer();
 
