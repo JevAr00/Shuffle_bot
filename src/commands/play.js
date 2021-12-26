@@ -1,9 +1,9 @@
 const ytdl = require('ytdl-core')
 const ytSearch = require('yt-search')
+const Guild = require('discord.js/src/structures/Guild');
 const {
     AudioPlayerStatus,
     StreamType,
-    NoSubscriberBehavior,
     createAudioPlayer,
     createAudioResource,
     joinVoiceChannel,
@@ -22,12 +22,18 @@ module.exports = {
 
         let song = {};
 
+        /**
+         * Inicia la conexion en una canal de voz
+         */
         const connection = joinVoiceChannel({
             channelId: voiceChannel.id,
             guildId: message.guild.id,
             adapterCreator: message.guild.voiceAdapterCreator,
         });
 
+        /**
+         * Valida si se recibe una URL o lenguaje natural para buscar cancion
+         */
         if (ytdl.validateURL(args[0])) {
             const video = await ytdl.getInfo(args[0]);
             song = { title: video.videoDetails.title, url: video.videoDetails.video_url };
@@ -45,6 +51,9 @@ module.exports = {
             }
         }
 
+        /**
+         * Cola global de canciones
+         */
         if(!serverQueue){
             const queueConstructor = {
                 Message: message,
@@ -68,6 +77,11 @@ module.exports = {
     }
 }
 
+/**
+ * @param {Guild} guild Identificador de la cola global
+ * @param {URL} song URL de la cancion a reproducir
+ * @returns Una cancion en el chat de voz en el que se encuentra unido
+ */
 const songPlayer = async (guild, song) => {
     const songQueue = queue.get(guild.id);
 
