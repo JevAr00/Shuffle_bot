@@ -1,6 +1,5 @@
 const ytdl = require('ytdl-core')
 const ytSearch = require('yt-search')
-const Guild = require('discord.js/src/structures/Guild');
 const {
     AudioPlayerStatus,
     StreamType,
@@ -65,7 +64,7 @@ module.exports = {
             queueConstructor.Songs.push(song);
 
             try{
-                await songPlayer(message.guild, queueConstructor.Songs[0]).catch();
+                songPlayer(message.guild, queueConstructor.Songs[0]);
             }catch(error){
                 queue.delete(message.guild.id);
                 await message.reply({content: `Avisa al admin\nserverQueue.songPlayer error\n\n ${error}`, ephemeral: true });
@@ -78,8 +77,8 @@ module.exports = {
 }
 
 /**
- * @param {Guild} guild Identificador de la cola global
- * @param {URL} song URL de la cancion a reproducir
+ * @param {*} guild Identificador de la cola global
+ * @param {*} song URL de la cancion a reproducir
  * @returns Una cancion en el chat de voz en el que se encuentra unido
  */
 const songPlayer = async (guild, song) => {
@@ -92,7 +91,7 @@ const songPlayer = async (guild, song) => {
     }
 
     try {
-        const stream = ytdl(song.url, { filter: 'audioonly' });
+        const stream = ytdl(song.url, { filter: 'audioonly' , Quality: 'highestaudio', highWaterMark:1 << 25});
         const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
         const player = createAudioPlayer();
 
