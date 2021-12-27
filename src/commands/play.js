@@ -18,7 +18,7 @@ module.exports = {
         if (!voiceChannel) return message.reply({ content: 'Parece que no estas dentro de un canal de voz al que pueda unirme', ephemeral: true });
 
         const serverQueue = queue.get(message.guild.id);
-        if (command === 'p') {
+        if (command === this.aliases[0] || command === 'play') {
             let song = {};
 
             /**
@@ -74,8 +74,8 @@ module.exports = {
                 return message.channel.send(`${song.title} agregada a la cola`);
             }
         }
-        else if (command === 'skip') songSkip(serverQueue);
-        else if (command === 'stop') songStop(serverQueue);
+        else if (command === this.aliases[1]) songSkip(serverQueue);
+        else if (command === this.aliases[2]) songStop(serverQueue);
     }
 }
 
