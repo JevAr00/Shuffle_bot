@@ -74,8 +74,8 @@ module.exports = {
                 return message.channel.send(`${song.title} agregada a la cola`);
             }
         }
-        else if (command === this.aliases[1]) songSkip(serverQueue);
-        else if (command === this.aliases[2]) songStop(serverQueue);
+        else if (command === this.aliases[1]) songSkip(message,serverQueue);
+        else if (command === this.aliases[2]) songStop(message,serverQueue);
     }
 }
 
@@ -116,14 +116,16 @@ const songPlayer = async (guild, song) => {
 /**
  * Pasa a la siguiente cancion en la cola
  */
-const songSkip = (serverQueue) => {
-    if(!serverQueue) return songQueue.Message.channel.send('No hay canciones en la cola');
-
-    serverQueue.connection.dispatcher.end();
+const songSkip = (message,serverQueue) => {
+    if(serverQueue.Songs.length == 1 || !serverQueue) {
+        return message.channel.send('No hay canciones en la cola');
+    }
+    serverQueue.Songs.shift();
+    songPlayer(message.guild, serverQueue.Songs[0]);
 }
 
-const songStop = (serverQueue) => {
+const songStop = (message,serverQueue) => {
     serverQueue.Songs = [];
-    serverQueue.connection.dispatcher.end();
-    return songQueue.Message.channel.send('Se ha detenido la reproduccion y se ha limpiado la lista de caciones');
+    serverQueue.Connection.destroy();
+    return message.channel.send('Se ha detenido la reproduccion y se ha limpiado la lista de canciones');
 }

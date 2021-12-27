@@ -11,7 +11,7 @@ module.exports = async (client, message) => {
 	try{
 		await commandList.execute(client, message, command, args);
 	} catch (error) {
-		console.error(error);
+		//console.error(error);
 		await message.reply({ content: 'Oh no! Algo ha pasado tratando de ejecutar el comando ', ephemeral: true});
 	}
 }
