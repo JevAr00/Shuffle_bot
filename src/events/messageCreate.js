@@ -6,7 +6,7 @@ module.exports = async (client, message) => {
 	
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const command = args.shift().toLowerCase();
-    const commandList = client.commands.get(command);
+    const commandList = client.commands.get(command) || client.commands.find(c => c.aliases && c.aliases.includes(command));
 
 	try{
 		await commandList.execute(client, message, command, args);
