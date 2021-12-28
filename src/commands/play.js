@@ -12,7 +12,7 @@ const queue = new Map();
 
 module.exports = {
     name: 'play',
-    aliases: ['p', 'skip','stop'],
+    aliases: ['p', 'skip', 'stop'],
     async execute(client, message, command, args) {
         const voiceChannel = message.member.voice.channel;
         if (!voiceChannel) return message.reply({ content: 'Parece que no estas dentro de un canal de voz al que pueda unirme', ephemeral: true });
@@ -74,8 +74,8 @@ module.exports = {
                 return message.channel.send(`${song.title} agregada a la cola`);
             }
         }
-        else if (command === this.aliases[1]) songSkip(message,serverQueue);
-        else if (command === this.aliases[2]) songStop(message,serverQueue);
+        else if (command === this.aliases[1]) songSkip(message, serverQueue);
+        else if (command === this.aliases[2]) songStop(message, serverQueue);
     }
 }
 
@@ -116,16 +116,16 @@ const songPlayer = async (guild, song) => {
 /**
  * Pasa a la siguiente cancion en la cola
  */
-const songSkip = (message,serverQueue) => {
-    if(serverQueue.Songs.length == 1 || !serverQueue) {
+const songSkip = (message, serverQueue) => {
+    if (serverQueue.Songs.length == 1 || !serverQueue) {
         return message.channel.send('No hay canciones en la cola');
     }
     serverQueue.Songs.shift();
     songPlayer(message.guild, serverQueue.Songs[0]);
 }
 
-const songStop = (message,serverQueue) => {
-    serverQueue.Songs = [];
+const songStop = (message, serverQueue) => {
     serverQueue.Connection.destroy();
+    serverQueue.Songs = [];
     return message.channel.send('Se ha detenido la reproduccion y se ha limpiado la lista de canciones');
 }
