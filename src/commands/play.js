@@ -92,7 +92,6 @@ const songPlayer = async (guild, song) => {
     const songQueue = queue.get(guild.id);
 
     if (!song) {
-        //setTimeout(()=>songQueue.Connection.destroy(), 20_000);
         songQueue.Connection.destroy();
         queue.delete(guild.id);
         return;
@@ -128,6 +127,9 @@ const songSkip = (message, serverQueue) => {
     songPlayer(message.guild, serverQueue.Songs[0]);
 }
 
+/**
+ * Detiene la reporduccion. Limpia la cola y desconecta el bot
+ */
 const songStop = (message, serverQueue) => {
     if(AudioPlayerStatus.Playing) {
         queue.delete(message.guild.id);
@@ -146,6 +148,9 @@ const clear = (message, serverQueue) => {
     return message.channel.send('Usted se ha barrido la cola');
 }
 
+/*
+ *Muestra la lista de canciones de la cola
+ */
 const queueList = (message, serverQueue) => {
     if (serverQueue.Songs.length > 0) {
         for (let i = 0; i < serverQueue.Songs.length; i++) {
