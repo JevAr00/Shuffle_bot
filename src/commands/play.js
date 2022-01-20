@@ -136,9 +136,13 @@ const songStop = (message, serverQueue) => {
     }
 }
 
+/**
+ * Limpia la lista de canciones
+ */
 const clear = (message, serverQueue) => {
-    serverQueue.Songs = [];
-    serverQueue.Songs.shift();
+    for (let i = 0; i <= serverQueue.Songs.length; i++) {
+        serverQueue.Songs.pop();
+    }
     return message.channel.send('Usted se ha barrido la cola');
 }
 
