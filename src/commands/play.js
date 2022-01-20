@@ -12,13 +12,14 @@ const queue = new Map();
 
 module.exports = {
     name: 'play',
-    aliases: ['p', 'skip', 'stop'],
+    aliases: ['p', 'skip', 'stop', 'clear', 'q'],
     async execute(client, message, command, args) {
         const voiceChannel = message.member.voice.channel;
         if (!voiceChannel) return message.reply({ content: 'Parece que no estas dentro de un canal de voz al que pueda unirme', ephemeral: true });
 
         const serverQueue = queue.get(message.guild.id);
         if (command === this.aliases[0] || command === 'play') {
+
             let song = {};
 
             /**
@@ -76,6 +77,9 @@ module.exports = {
         }
         else if (command === this.aliases[1]) songSkip(message, serverQueue);
         else if (command === this.aliases[2]) songStop(message, serverQueue);
+        else if (command === this.aliases[3]) clear(message, serverQueue);
+        else if (command === this.aliases[4]) queueList(message, serverQueue);
+
     }
 }
 
@@ -117,7 +121,7 @@ const songPlayer = async (guild, song) => {
  * Pasa a la siguiente cancion en la cola
  */
 const songSkip = (message, serverQueue) => {
-    if (serverQueue.Songs.length == 1 || !serverQueue) {
+    if (serverQueue.Songs.length <= 1 || !serverQueue) {
         return message.channel.send('No hay canciones en la cola');
     }
     serverQueue.Songs.shift();
@@ -125,7 +129,25 @@ const songSkip = (message, serverQueue) => {
 }
 
 const songStop = (message, serverQueue) => {
-    serverQueue.Connection.destroy();
+    if(AudioPlayerStatus.Playing) {
+        queue.delete(message.guild.id);
+        serverQueue.Connection.destroy();
+        return message.channel.send('Se ha detenido la reproduccion y se ha limpiado la lista de canciones');
+    }
+}
+
+const clear = (message, serverQueue) => {
     serverQueue.Songs = [];
-    return message.channel.send('Se ha detenido la reproduccion y se ha limpiado la lista de canciones');
+    serverQueue.Songs.shift();
+    return message.channel.send('Usted se ha barrido la cola');
+}
+
+const queueList = (message, serverQueue) => {
+    if (serverQueue.Songs.length > 0) {
+        for (let i = 0; i < serverQueue.Songs.length; i++) {
+            message.channel.send(`${serverQueue.Songs[i].title}`);
+        }
+    } else if (!serverQueue || serverQueue.Songs.length < 1) {
+        return message.channel.send('No hay canciones en la cola');
+    }
 }
