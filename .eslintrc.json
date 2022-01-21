@@ -4,8 +4,8 @@
         "node": true,
         "es6": true
     },
-    "parseOptions":{
-        "ecmaVersion": 2021
+    "parserOptions":{
+        "ecmaVersion": "latest"
     },
     "rules":{
         "arrow-spacing": ["warn", { "before": true, "after": true }],
