@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const Command = require('./../structures/Command');
 
-module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('ping')
-		.setDescription('Manda un ping'),
-	async execute(interaction) {
-		await interaction.reply('pong hijo de use madre');
+module.exports = new Command({
+	name: 'ping',
+	description: 'ping in miliseconds to the discord server',
+
+	async execute(client, message) {
+		await message.reply(`Ping ${client.ws.ping} ms`);
 	},
-};
+});
