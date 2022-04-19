@@ -1,15 +1,11 @@
-const { Client, Collection, Intents } = require('discord.js');
+const Client = require('./structures/Client');
 const dotenv = require('dotenv');
 
-
 // Nueva instancia de cliente
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client();
 dotenv.config();
 
 // Handlers
-client.commands = new Collection();
-client.events = new Collection();
-
 ['commandHandler', 'eventHandler'].forEach(handler => {
 	require(`./handlers/${handler}`)(client);
 });
