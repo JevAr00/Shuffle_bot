@@ -1,4 +1,5 @@
 const { Client, Intents, Collection } = require('discord.js');
+const Command = require('./Command');
 
 const intents = [
 	Intents.FLAGS.GUILDS,
@@ -14,11 +15,6 @@ class cClient extends Client {
      * @type {Collection<string, Command>}
      */
 		this.commands = new Collection();
-
-		/**
-     * @type {Collection<string, Event>}
-     */
-		this.events = new Collection();
 	}
 }
 
