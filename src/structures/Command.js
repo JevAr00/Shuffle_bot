@@ -2,11 +2,12 @@ const { Client, Message, Interaction } = require('discord.js');
 
 class Command {
 	/**
-	 * @typedef {{name: string, description: string, execute: executeCommand}} Commandparams
+	 * @typedef {{name: string, aliases: string[] | string, description: string, execute: executeCommand}} Commandparams
 	 * @param {Commandparams} params
 	 */
 	constructor(params) {
 		this.name = params.name;
+		this.aliases = params.aliases;
 		this.description = params.description;
 		this.execute = params.execute;
 	}
