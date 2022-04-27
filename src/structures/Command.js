@@ -15,7 +15,7 @@ class Command {
 /**
  * @param {Client | Interaction} client
  * @param {Message} message
- * @param {Command.name} command
+ * @param {string} command
  * @param {string[]} args
  */
 function executeCommand(client, message, command, args) {}
