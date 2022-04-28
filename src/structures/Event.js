@@ -1,4 +1,4 @@
-const { Client } = require('discord.js');
+const { Client, Message, Interaction } = require('discord.js');
 
 class Event {
 	/**
@@ -13,8 +13,9 @@ class Event {
 }
 
 /**
- * @param {Client} client
+ * @param { Client } client
+ * @param { Message | Interaction } event
  */
-function executeEvent(client) {}
+function executeEvent(client, event) {}
 
 module.exports = Event;
