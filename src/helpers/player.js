@@ -30,9 +30,9 @@ function joinVoice(voiceChannel, messageGuild) {
 	});
 }
 
-function createPlayerResource(songUrl) {
-	const stream = ytdl(songUrl, { filter: 'audioonly', Quality: 'highestaudio', highWaterMark: 1 << 25 });
-	return createAudioResource(stream, { inputType: StreamType.Arbitrary });
+function createPlayerResource(songObject) {
+	const stream = ytdl(songObject.url, { filter: 'audioonly', Quality: 'highestaudio', highWaterMark: 1 << 25 });
+	return createAudioResource(stream, { inputType: StreamType.Arbitrary, metadata: { title: songObject.title } });
 }
 
 async function searchSong(songToSearch) {
