@@ -7,8 +7,8 @@ class Command {
 	 */
 	constructor(params) {
 		this.name = params.name;
-		this.aliases = params.aliases;
-		this.description = params.description;
+		this.aliases = params.aliases || null;
+		this.description = params.description || null;
 		this.execute = params.execute;
 	}
 }
