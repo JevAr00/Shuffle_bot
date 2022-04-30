@@ -16,7 +16,7 @@ module.exports = new Event({
 			await commandList.execute(client, message, command, args);
 		}
 		catch (error) {
-			await message.reply({ content: 'Oh no! Algo ha pasado tratando de ejecutar el comando ', ephemeral: true });
+			await message.reply('Error al ejecutar\nEl comando ha tenido un problema o no existe');
 		}
 	},
 });
