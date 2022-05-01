@@ -24,8 +24,7 @@ module.exports = new Command({
 				return message.channel.send(`${player.state.resource.metadata.title} esta sonando`);
 			}
 			else {
-				console.log('no tengo nada');
-				return message.reply('No he recibido un nombre o URL de una cancion');
+				return message.reply('Nombre o URL de cancion no encontrado');
 			}
 		}
 
