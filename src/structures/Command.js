@@ -14,11 +14,12 @@ class Command {
 }
 
 /**
- * @param {Client | Interaction} client
- * @param {Message} message
- * @param {string} command
+ * @param {Client} client
  * @param {string[]} args
+ * @param {Message | Interaction} event
  */
-function executeCommand(client, message, command, args) {}
+function executeCommand(client, args, event) {
+	// reference of constructor(params.execute)
+}
 
 module.exports = Command;
