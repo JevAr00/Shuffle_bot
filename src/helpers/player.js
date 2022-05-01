@@ -31,7 +31,7 @@ function joinVoice(voiceChannel, messageGuild) {
 }
 
 function createPlayerResource(songObject) {
-	const stream = ytdl(songObject.url, { filter: 'audioonly', Quality: 'highestaudio', highWaterMark: 1 << 25 });
+	const stream = ytdl(songObject.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
 	return createAudioResource(stream, { inputType: StreamType.Arbitrary, metadata: { title: songObject.title } });
 }
 
