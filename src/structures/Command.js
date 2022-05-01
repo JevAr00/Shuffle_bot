@@ -16,7 +16,7 @@ class Command {
 /**
  * @param {Client} client
  * @param {string[]} args
- * @param {Message | Interaction} event
+ * @param {Message} event
  */
 function executeCommand(client, args, event) {
 	// reference of constructor(params.execute)
