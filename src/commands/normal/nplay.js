@@ -28,10 +28,9 @@ module.exports = new Command({
 			}
 		}
 
-		const connection = joinVoice(voiceChannel, message.guild);
-
 		const song = await searchSong(args);
 		const resource = createPlayerResource(song);
+		const connection = joinVoice(voiceChannel, message.guild);
 
 		player.play(resource);
 		connection.subscribe(player);
