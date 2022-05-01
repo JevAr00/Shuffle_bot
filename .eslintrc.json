@@ -8,7 +8,7 @@
       "ecmaVersion": "latest"
     },
     "rules":{
-			"array-bracket-spacing": ["error", "always"],
+			"array-bracket-spacing": ["error", "never"],
 			"arrow-spacing": ["warn", { "before": true, "after": true }],
 			"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
 			"comma-dangle": ["error", "always-multiline"],
