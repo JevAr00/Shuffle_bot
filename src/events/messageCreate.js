@@ -4,19 +4,20 @@ module.exports = new Event({
 	name: 'messageCreate',
 	once: false,
 
-	async execute(client, message) {
+	execute(client, message) {
 		const prefix = '!';
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 		const args = message.content.slice(prefix.length).split(/ +/);
-		const command = args.shift().toLowerCase();
-		const commandList = client.commands.get(command) || client.commands.find(c => c.aliases && c.aliases.includes(command));
+		const commandName = args.shift().toLowerCase();
+		const command = client.commands.get(commandName) || client.commands.find(c => c.aliases && c.aliases.includes(commandName));
 
 		try {
-			await commandList.execute(client, message, command, args);
+			command.execute(client, args, message);
 		}
 		catch (error) {
-			await message.reply('Error al ejecutar\nEl comando ha tenido un problema o no existe');
+			console.log(error);
+			message.reply('Error al ejecutar\nEl comando ha tenido un problema o no existe');
 		}
 	},
 });
