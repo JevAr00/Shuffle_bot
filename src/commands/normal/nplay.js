@@ -16,16 +16,16 @@ module.exports = new Command({
 		if (!voiceChannel) return message.reply('Parece que no estas dentro de un canal de voz al que pueda unirme');
 
 		const player = getPlayer();
-		const currentSong = player.state.resource.metadata.title;
 		const isPaused = player.state.status === playerStatus.Paused;
 
 		if (!args.length) {
 			if (isPaused) {
 				player.unpause();
-				return message.channel.send(`${currentSong} esta sonando`);
+				return message.channel.send(`${player.state.resource.metadata.title} esta sonando`);
 			}
 			else {
-				return message.channel.send('No he recibido un nombre o URL de una cancion');
+				console.log('no tengo nada');
+				return message.reply('No he recibido un nombre o URL de una cancion');
 			}
 		}
 
