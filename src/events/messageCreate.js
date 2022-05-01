@@ -2,7 +2,6 @@ const Event = require('../structures/Event');
 
 module.exports = new Event({
 	name: 'messageCreate',
-	once: false,
 
 	execute(client, message) {
 		const prefix = '!';
