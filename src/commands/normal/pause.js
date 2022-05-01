@@ -8,7 +8,7 @@ const {
 module.exports = new Command({
 	name: 'pause',
 
-	async execute(client, message, command, args) {
+	async execute(client, args, message) {
 		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.reply('Parece que no estas dentro de un canal de voz al que pueda unirme');
 
