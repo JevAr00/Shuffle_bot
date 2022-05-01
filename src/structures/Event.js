@@ -16,6 +16,8 @@ class Event {
  * @param { Client } client
  * @param { Message | Interaction } event
  */
-function executeEvent(client, event) {}
+function executeEvent(client, event) {
+	// reference of constructor(params.execute)
+}
 
 module.exports = Event;
