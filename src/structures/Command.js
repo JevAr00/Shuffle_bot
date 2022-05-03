@@ -1,4 +1,4 @@
-const { Client, Message, Interaction } = require('discord.js');
+const { Client, Message } = require('discord.js');
 
 class Command {
 	/**
