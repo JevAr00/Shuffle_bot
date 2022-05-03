@@ -3,9 +3,10 @@ const {
 	playerStatus,
 	joinVoice,
 	getPlayer,
-	createPlayerResource,
 	searchSong,
+	startPlayer,
 } = require('../../helpers/player');
+const { getQueue, setNewQueue } = require('../../helpers/playerQueue');
 
 module.exports = new Command({
 	name: 'nplay',
@@ -28,19 +29,20 @@ module.exports = new Command({
 			}
 		}
 
+		const serverQueue = getQueue(message.guildId);
+
 		const song = await searchSong(args);
-		const resource = createPlayerResource(song);
 		const connection = joinVoice(voiceChannel, message.guild);
 
-		player.play(resource);
-		connection.subscribe(player);
+		if (!serverQueue) {
+			const queue = setNewQueue(message, connection);
 
-		player.once(playerStatus.Playing, () => {
-			message.channel.send(`${song.title} esta sonando`);
-		});
-
-		player.on(playerStatus.Idle, () => {
-			connection.destroy();
-		});
+			queue.songList.push(song);
+			startPlayer(message.guildId);
+		}
+		else {
+			serverQueue.songList.push(song);
+			return message.channel.send(`${song.title} agregada a la cola`);
+		}
 	},
 });
