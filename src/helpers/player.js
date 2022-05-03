@@ -7,6 +7,7 @@ const {
 	createAudioResource,
 	joinVoiceChannel,
 } = require('@discordjs/voice');
+const { getQueue, deleteQueue } = require('./playerQueue');
 
 const player = createAudioPlayer();
 
@@ -20,6 +21,30 @@ const playerStatus = {
 
 function getPlayer() {
 	return player;
+}
+
+function startPlayer(serverQueueKey) {
+	const { message, connection, songList } = getQueue(serverQueueKey);
+	const song = songList[0];
+
+	if (!song) {
+		deleteQueue(serverQueueKey);
+		connection.destroy();
+		return;
+	}
+
+	const resource = createPlayerResource(song);
+	player.play(resource);
+	connection.subscribe(player);
+
+	player.once(playerStatus.Playing, () => {
+		message.channel.send(`${song.title} esta sonando`);
+	});
+
+	player.on(playerStatus.Idle, () => {
+		songList.shift();
+		startPlayer(serverQueueKey);
+	});
 }
 
 function joinVoice(voiceChannel, messageGuild) {
@@ -62,6 +87,6 @@ module.exports = {
 	playerStatus,
 	getPlayer,
 	joinVoice,
-	createPlayerResource,
 	searchSong,
+	startPlayer,
 };
