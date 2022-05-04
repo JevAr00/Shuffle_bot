@@ -1,0 +1,36 @@
+name: Deployment App
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint code 
+        run: npm run lint
+
+  Deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to railway
+        if: ${{ github.event_name == 'push'}}
