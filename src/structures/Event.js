@@ -7,7 +7,7 @@ class Event {
 	 */
 	constructor(params) {
 		this.name = params.name;
-		this.once = params.once || false;
+		this.once = params.once ?? false;
 		this.execute = params.execute;
 	}
 }
