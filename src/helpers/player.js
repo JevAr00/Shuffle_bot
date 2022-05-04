@@ -28,8 +28,8 @@ function startPlayer(serverQueueKey) {
 	const song = songList[0];
 
 	if (!song) {
-		deleteQueue(serverQueueKey);
 		connection.destroy();
+		deleteQueue(serverQueueKey);
 		return;
 	}
 
@@ -53,6 +53,11 @@ function joinVoice(voiceChannel, messageGuild) {
 		guildId: messageGuild.id,
 		adapterCreator: messageGuild.voiceAdapterCreator,
 	});
+}
+
+function closeVoiceConnection(serverQueueKey) {
+	const { connection } = getQueue(serverQueueKey);
+	connection.destroy();
 }
 
 function createPlayerResource(songObject) {
@@ -89,4 +94,5 @@ module.exports = {
 	joinVoice,
 	searchSong,
 	startPlayer,
+	closeVoiceConnection,
 };
