@@ -29,7 +29,8 @@ module.exports = new Command({
 			}
 		}
 
-		const serverQueue = getQueue(message.guildId);
+		const messageGuildId = message.guildId;
+		const serverQueue = getQueue(messageGuildId);
 
 		const song = await searchSong(args);
 		const connection = joinVoice(voiceChannel, message.guild);
@@ -38,11 +39,11 @@ module.exports = new Command({
 			const queue = setNewQueue(message, connection);
 
 			queue.songList.push(song);
-			startPlayer(message.guildId);
+			startPlayer(messageGuildId);
 		}
 		else {
 			serverQueue.songList.push(song);
-			return message.channel.send(`${song.title} agregada a la cola`);
+			message.channel.send(`${song.title} agregada a la cola`);
 		}
 	},
 });
