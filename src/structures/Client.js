@@ -15,6 +15,8 @@ class cClient extends Client {
      * @type {Collection<string, Command>}
      */
 		this.commands = new Collection();
+
+		this.prefix = '-';
 	}
 }
 

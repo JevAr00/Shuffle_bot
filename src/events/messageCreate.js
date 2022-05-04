@@ -4,7 +4,7 @@ module.exports = new Event({
 	name: 'messageCreate',
 
 	execute(client, message) {
-		const prefix = '!';
+		const prefix = client.prefix;
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 		const args = message.content.slice(prefix.length).split(/ +/);
