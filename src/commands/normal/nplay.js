@@ -14,18 +14,19 @@ module.exports = new Command({
 
 	async execute(client, args, message) {
 		const voiceChannel = message.member.voice.channel;
-		if (!voiceChannel) return message.reply('Parece que no estas dentro de un canal de voz al que pueda unirme');
+		if (!voiceChannel) return message.reply('No estás dentro de un canal de voz al que pueda unirme');
 
 		const player = getPlayer();
 		const isPaused = player.state.status === playerStatus.Paused;
+		const emptyArgs = !args.length;
 
-		if (!args.length) {
+		if (emptyArgs) {
 			if (isPaused) {
 				player.unpause();
-				return message.channel.send(`${player.state.resource.metadata.title} esta sonando`);
+				return message.channel.send(`${player.state.resource.metadata.title} está sonando`);
 			}
 			else {
-				return message.reply('Nombre o URL de cancion no encontrado');
+				return message.reply('Nombre o URL de canción no encontrado');
 			}
 		}
 
