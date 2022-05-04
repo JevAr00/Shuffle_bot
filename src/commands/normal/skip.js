@@ -8,7 +8,7 @@ module.exports = new Command({
 
 	execute(client, args, message) {
 		const voiceChannel = message.member.voice.channel;
-		if (!voiceChannel) return message.reply('Parece que no estas dentro de un canal de voz al que pueda unirme');
+		if (!voiceChannel) return message.reply('No estás dentro de un canal de voz al que pueda unirme');
 
 		const messageGuildId = message.guildId;
 		const serverQueue = getQueue(messageGuildId);
@@ -23,11 +23,11 @@ module.exports = new Command({
 				startPlayer(messageGuildId);
 			}
 			else {
-				message.reply('No hay mas canciones en la cola');
+				message.reply('No hay más canciones en la cola');
 			}
 		}
 		else {
-			message.reply('No me encuentro reproduciendo canciones');
+			message.reply('No estoy reproduciendo música. No es posible pasar a la siguiente canción');
 		}
 	},
 });
