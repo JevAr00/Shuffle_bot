@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command');
-const { playerStatus, getPlayer, startPlayer } = require('../../helpers/player');
+const { startPlayer } = require('../../helpers/player');
 const { getQueue } = require('../../helpers/playerQueue');
 
 module.exports = new Command({
