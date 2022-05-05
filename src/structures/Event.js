@@ -4,6 +4,13 @@
 
 class Event {
 	/**
+ 	* @callback executeEvent
+ 	* @param { Client } client
+	* @param { Message | Interaction } event
+	* @returns { void }
+ 	*/
+
+	/**
 	 * @typedef {{name: string, once: boolean, execute: executeEvent}} Eventparams
 	 * @param {Eventparams} params
 	 */
@@ -12,14 +19,6 @@ class Event {
 		this.once = params.once ?? false;
 		this.execute = params.execute;
 	}
-}
-
-/**
- * @param { Client } client
- * @param { Message | Interaction } event
- */
-function executeEvent(client, event) {
-	// reference of constructor(params.execute)
 }
 
 module.exports = Event;
