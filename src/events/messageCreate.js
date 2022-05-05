@@ -1,4 +1,5 @@
 const Event = require('../structures/Event');
+const { cleanInput } = require('../helpers/input');
 
 module.exports = new Event({
 	name: 'messageCreate',
@@ -7,7 +8,7 @@ module.exports = new Event({
 		const prefix = client.prefix;
 		if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-		const args = message.content.slice(prefix.length).split(/ +/);
+		const args = cleanInput(prefix, message.content);
 		const commandName = args.shift().toLowerCase();
 		const command = client.commands.get(commandName) || client.commands.find(c => c.aliases && c.aliases.includes(commandName));
 
