@@ -36,15 +36,20 @@ module.exports = new Command({
 		const song = await searchSong(args);
 		const connection = joinVoice(voiceChannel, message.guild);
 
-		if (!serverQueue) {
-			const queue = setNewQueue(message, connection);
+		try {
+			if (!serverQueue) {
+				const queue = setNewQueue(message, connection);
 
-			queue.songList.push(song);
-			startPlayer(messageGuildId);
+				queue.songList.push(song);
+				startPlayer(messageGuildId);
+			}
+			else {
+				serverQueue.songList.push(song);
+				message.channel.send(`${song.title} agregada a la cola`);
+			}
 		}
-		else {
-			serverQueue.songList.push(song);
-			message.channel.send(`${song.title} agregada a la cola`);
+		catch {
+			message.channel.send(`${args.join(' ')} no ha podido ser agregada a la cola`);
 		}
 	},
 });
