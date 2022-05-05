@@ -1,5 +1,6 @@
 const { Client, Intents, Collection } = require('discord.js');
-const Command = require('./Command');
+
+/** @typedef {import ("./Command")} Command */
 
 const intents = [
 	Intents.FLAGS.GUILDS,

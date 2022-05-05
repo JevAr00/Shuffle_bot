@@ -1,4 +1,5 @@
-const { Client, Message } = require('discord.js');
+/** @typedef {import ('discord.js').Client} Client */
+/** @typedef {import ('discord.js').Message} Message */
 
 class Command {
 	/**
