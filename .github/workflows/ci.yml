@@ -1,4 +1,4 @@
-name: Deployment App
+name: App Deployment 
 
 on:
   push:
@@ -28,9 +28,3 @@ jobs:
       - name: Lint code 
         run: npm run lint
 
-  Deploy:
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to railway
-        if: ${{ github.event_name == 'push'}}
