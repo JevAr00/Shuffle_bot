@@ -12,7 +12,7 @@ module.exports = new Command({
 		const messageGuildId = message.guildId;
 
 		const serverQueue = getQueue(messageGuildId);
-		if (!serverQueue) return message.reply('No hay cola de reproduccion. No se puede lipiar');
+		if (!serverQueue) return message.reply('No hay cola de reproduccion. No se puede limpiar');
 
 		const songListSize = serverQueue.songList.length;
 
