@@ -9,17 +9,15 @@ module.exports = new Command({
 		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.reply('No estás dentro de un canal de voz al que pueda unirme');
 
-		const messageGuildId = message.guildId;
 		const player = getPlayer();
-		const isWorking = player.state.status !== playerStatus.Idle;
 
-		if (isWorking) {
-			player.stop();
-			closeVoiceConnection(messageGuildId);
-			deleteQueue(messageGuildId);
-		}
-		else {
-			message.reply('No es posible detener la música');
-		}
+		const isIdle = player.state.status === playerStatus.Idle;
+		if (isIdle) return message.reply('No es posible detener la música');
+
+		const messageGuildId = message.guildId;
+
+		player.stop();
+		closeVoiceConnection(messageGuildId);
+		deleteQueue(messageGuildId);
 	},
 });
