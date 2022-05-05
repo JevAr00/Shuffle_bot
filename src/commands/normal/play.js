@@ -9,7 +9,7 @@ const {
 const { getQueue, setNewQueue } = require('../../helpers/playerQueue');
 
 module.exports = new Command({
-	name: 'nplay',
+	name: 'play',
 	aliases: 'p',
 
 	async execute(client, args, message) {
