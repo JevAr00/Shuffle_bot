@@ -47,5 +47,3 @@ jobs:
           heroku_app_name: ${{ secrets.HEROKU_APP }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           procfile: "worker: npm start"
-        env:
-          TOKEN: ${{ secrets.TOKEN }}
