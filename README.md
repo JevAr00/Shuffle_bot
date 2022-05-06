@@ -1,3 +1,4 @@
+[![App Deployment](https://github.com/JevAr00/Shuffle_bot/actions/workflows/ci.yml/badge.svg)](https://github.com/JevAr00/Shuffle_bot/actions/workflows/ci.yml)
 # Shuffle
 Bot personal para grupo de <a href="https://discord.com/">Discord</a>.
 Se ha seguido la <a href="https://discordjs.guide/">documentacion oficial</a> para el desarrollo de el Bot
