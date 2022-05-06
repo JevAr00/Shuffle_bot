@@ -3,7 +3,11 @@ name: App Deployment
 on:
   push:
     branches:
-      - "main"
+      - main
+  pull_request:
+    branches:
+      - main
+    types: [ opened, synchronize ]
 
 jobs:
   check:
@@ -28,3 +32,15 @@ jobs:
       - name: Lint code 
         run: npm run lint
 
+  deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Event
+        if: ${{ github.event_name == 'push' }}
+      - name: Deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
