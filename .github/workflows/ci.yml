@@ -36,9 +36,8 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - name: Check Event
-        if: ${{ github.event_name == 'push' }}
       - name: Deploy to heroku
+        if: ${{ github.event_name == 'push' }}
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
