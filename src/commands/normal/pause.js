@@ -1,7 +1,8 @@
 const Command = require('../../structures/Command');
 const {
 	playerStatus,
-	getPlayer,
+	getPlayerState,
+	pausePlayer,
 } = require('../../helpers/player');
 
 
@@ -12,12 +13,12 @@ module.exports = new Command({
 		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.reply('No estás dentro de un canal de voz al que pueda unirme');
 
-		const player = getPlayer();
+		const state = getPlayerState();
 
-		const isIdle = player.state.status === playerStatus.Idle;
-		const isPlaying = player.state.status === playerStatus.Playing;
+		const isIdle = state === playerStatus.Idle;
+		const isPlaying = state === playerStatus.Playing;
 
 		if (isIdle) return message.reply('No hay ninguna canción sonando');
-		if (isPlaying) return player.pause();
+		if (isPlaying) return pausePlayer();
 	},
 });

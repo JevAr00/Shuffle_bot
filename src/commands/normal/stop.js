@@ -1,5 +1,5 @@
 const Command = require('../../structures/Command');
-const { playerStatus, getPlayer, closeVoiceConnection } = require('../../helpers/player');
+const { playerStatus, getPlayerState, closeVoiceConnection, stopPlayer } = require('../../helpers/player');
 const { deleteQueue } = require('../../helpers/playerQueue');
 
 module.exports = new Command({
@@ -9,14 +9,14 @@ module.exports = new Command({
 		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.reply('No estás dentro de un canal de voz al que pueda unirme');
 
-		const player = getPlayer();
+		const state = getPlayerState();
 
-		const isIdle = player.state.status === playerStatus.Idle;
+		const isIdle = state === playerStatus.Idle;
 		if (isIdle) return message.reply('No es posible detener la música');
 
 		const messageGuildId = message.guildId;
 
-		player.stop();
+		stopPlayer();
 		closeVoiceConnection(messageGuildId);
 		deleteQueue(messageGuildId);
 	},
