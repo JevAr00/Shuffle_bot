@@ -1,10 +1,12 @@
 const Command = require('../../structures/Command');
 const {
 	playerStatus,
+	getPlayerState,
 	joinVoice,
-	getPlayer,
 	searchSong,
 	startPlayer,
+	unpausePlayer,
+	getPlayerMetadata,
 } = require('../../helpers/player');
 const { getQueue, setNewQueue } = require('../../helpers/playerQueue');
 
@@ -16,14 +18,15 @@ module.exports = new Command({
 		const voiceChannel = message.member.voice.channel;
 		if (!voiceChannel) return message.reply('No estás dentro de un canal de voz al que pueda unirme');
 
-		const player = getPlayer();
-		const isPaused = player.state.status === playerStatus.Paused;
+		const state = getPlayerState();
+		const isPaused = state === playerStatus.Paused;
 		const emptyArgs = !args.length;
 
 		if (emptyArgs) {
 			if (isPaused) {
-				player.unpause();
-				return message.channel.send(`${player.state.resource.metadata.title} está sonando`);
+				unpausePlayer();
+				const playerData = getPlayerMetadata();
+				return message.channel.send(`${playerData.title} está volviendo a sonar`);
 			}
 			else {
 				return message.reply('Nombre o URL de canción no encontrado');

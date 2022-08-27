@@ -6,6 +6,7 @@ const {
 	createAudioPlayer,
 	createAudioResource,
 	joinVoiceChannel,
+	getVoiceConnection,
 } = require('@discordjs/voice');
 const { getQueue, deleteQueue } = require('./playerQueue');
 
@@ -19,44 +20,64 @@ const playerStatus = {
 	AutoPaused: AudioPlayerStatus.AutoPaused,
 };
 
-function getPlayer() {
-	return player;
+function getPlayerState() {
+	return player.state.status;
+}
+
+function getPlayerMetadata() {
+	return player.state.resource.metadata;
+}
+
+function pausePlayer() {
+	player.pause();
+}
+
+function unpausePlayer() {
+	player.unpause();
+}
+
+function stopPlayer() {
+	player.stop();
 }
 
 function startPlayer(serverQueueKey) {
-	const { message, connection, songList } = getQueue(serverQueueKey);
-	const song = songList[0];
+	const queue = getQueue(serverQueueKey);
+	const song = queue.songList[0];
 
 	if (!song) {
-		connection.destroy();
+		closeVoiceConnection(serverQueueKey);
 		deleteQueue(serverQueueKey);
 		return;
 	}
 
 	const resource = createPlayerResource(song);
 	player.play(resource);
-	connection.subscribe(player);
+	queue.connection.subscribe(player);
 
-	player.once(playerStatus.Playing, () => {
-		message.channel.send(`${song.title} esta sonando`);
-	});
+	queue.message.channel.send(`${song.title} esta sonando`);
 
 	player.on(playerStatus.Idle, () => {
-		songList.shift();
+		queue.songList.shift();
 		startPlayer(serverQueueKey);
 	});
 }
 
 function joinVoice(voiceChannel, messageGuild) {
-	return joinVoiceChannel({
-		channelId: voiceChannel.id,
-		guildId: messageGuild.id,
-		adapterCreator: messageGuild.voiceAdapterCreator,
-	});
+	const voiceConnection = getVoiceConnection(messageGuild.id);
+
+	if (!voiceConnection) {
+		return joinVoiceChannel({
+			channelId: voiceChannel.id,
+			guildId: messageGuild.id,
+			adapterCreator: messageGuild.voiceAdapterCreator,
+		});
+	}
+
+	return voiceConnection;
 }
 
-function closeVoiceConnection(serverQueueKey) {
-	const { connection } = getQueue(serverQueueKey);
+function closeVoiceConnection(messageGuildId) {
+	const connection = getVoiceConnection(messageGuildId);
 	connection.destroy();
 }
 
@@ -90,9 +111,13 @@ async function searchByName(query) {
 
 module.exports = {
 	playerStatus,
-	getPlayer,
+	getPlayerState,
 	joinVoice,
 	searchSong,
 	startPlayer,
+	pausePlayer,
+	unpausePlayer,
+	stopPlayer,
 	closeVoiceConnection,
+	getPlayerMetadata,
 };
